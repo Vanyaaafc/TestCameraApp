@@ -1,26 +1,14 @@
 import 'package:flutter/material.dart';
 
-class PhotoButton extends StatefulWidget {
-  final void Function(bool isPhotoMode) onModeChanged;
+class PhotoButton extends StatelessWidget {
+  final void Function() onPressed;
 
-  const PhotoButton({super.key, required this.onModeChanged});
-
-  @override
-  State<PhotoButton> createState() => _PhotoButtonState();
-}
-
-class _PhotoButtonState extends State<PhotoButton> {
-  bool isVideoMode = false; // По умолчанию фото
+  const PhotoButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: () {
-        setState(() {
-          isVideoMode = !isVideoMode;
-        });
-        widget.onModeChanged(isVideoMode);
-      },
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         shape: const CircleBorder(),
         padding: const EdgeInsets.all(0),
@@ -38,10 +26,13 @@ class _PhotoButtonState extends State<PhotoButton> {
           color: Colors.transparent,
         ),
         child: Center(
-          child: Icon(
-            isVideoMode ? Icons.videocam : Icons.photo_camera,
-            size: 40,
-            color: Colors.white,
+          child: Container(
+            width: 65,
+            height: 65,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white,
+            ),
           ),
         ),
       ),

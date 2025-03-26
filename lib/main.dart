@@ -5,13 +5,13 @@ import 'package:test_camera_app/features/camera_screen/presentation/camera_scree
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
-  print("📷 Доступные камеры: $cameras");
 
   runApp(MyApp(cameras: cameras));
 }
 
 class MyApp extends StatelessWidget {
   final List<CameraDescription> cameras;
+
   const MyApp({super.key, required this.cameras});
 
   @override

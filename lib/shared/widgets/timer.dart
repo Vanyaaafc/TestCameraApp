@@ -1,47 +1,38 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 class TimerWidget extends StatefulWidget {
-  final bool isRecording;
-
-  const TimerWidget({super.key, required this.isRecording});
+  const TimerWidget({super.key});
 
   @override
   State<TimerWidget> createState() => _TimerWidgetState();
 }
 
 class _TimerWidgetState extends State<TimerWidget> {
+  int _seconds = 0;
   Timer? _timer;
-  int _recordSeconds = 0;
 
   @override
-  void didUpdateWidget(TimerWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    if (widget.isRecording && !oldWidget.isRecording) {
-      _startTimer();
-    } else if (!widget.isRecording && oldWidget.isRecording) {
-      _stopTimer();
-    }
+  void initState() {
+    super.initState();
+    _startTimer();
   }
 
   void _startTimer() {
-    _recordSeconds = 0;
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (mounted) {
-        setState(() {
-          _recordSeconds++;
-        });
-      }
-    });
-  }
-
-  void _stopTimer() {
+    if (!mounted) return;
     _timer?.cancel();
-    _timer = null;
-    setState(() {
-      _recordSeconds = 0;
-    });
+    _seconds = 0;
+    _timer = Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (mounted) {
+          setState(() {
+            _seconds++;
+          });
+        }
+      },
+    );
   }
 
   String _formatTime(int seconds) {
@@ -53,20 +44,19 @@ class _TimerWidgetState extends State<TimerWidget> {
   @override
   void dispose() {
     _timer?.cancel();
+    _timer = null;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!widget.isRecording) return const SizedBox.shrink();
-
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         const Icon(Icons.circle, color: Colors.red, size: 8),
         const SizedBox(width: 4),
         Text(
-          _formatTime(_recordSeconds),
+          _formatTime(_seconds),
           style: const TextStyle(color: Colors.white),
         ),
       ],
